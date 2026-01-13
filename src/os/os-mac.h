@@ -97,7 +97,7 @@ static inline int gettid(void)
 
 static inline bool fio_fallocate(struct fio_file *f, uint64_t offset, uint64_t len)
 {
-	fstore_t store = {F_ALLOCATEALL, F_PEOFPOSMODE, offset, len};
+	fstore_t store = {F_ALLOCATEALL, F_PEOFPOSMODE, (off_t)offset, (off_t)len};
 	if (fcntl(f->fd, F_PREALLOCATE, &store) != -1) {
 		if (ftruncate(f->fd, len) == 0)
 			return true;
