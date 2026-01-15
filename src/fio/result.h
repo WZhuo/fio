@@ -9,6 +9,8 @@ namespace fio {
 /// \brief Error types for iceberg.
 enum class ErrorKind {
   kTimedOut,
+  kNotSupported,
+  kInvalidArgument,
 };
 
 /// \brief Error with a kind and a message.
@@ -32,8 +34,8 @@ using Status = Result<void>;
 /// \brief Macro to define error creation functions
 #define DEFINE_ERROR_FUNCTION(name)                                           \
   template <typename... Args>                                                 \
-  inline auto name(const std::format_string<Args...> fmt, Args&&... args)     \
-      -> std::unexpected<Error> {                                             \
+  inline auto name(const std::format_string<Args...> fmt,                     \
+                   Args&&... args) -> std::unexpected<Error> {                \
     return std::unexpected<Error>(                                            \
         {ErrorKind::k##name, std::format(fmt, std::forward<Args>(args)...)}); \
   }                                                                           \
@@ -42,7 +44,8 @@ using Status = Result<void>;
   }
 
 DEFINE_ERROR_FUNCTION(TimedOut)
-
+DEFINE_ERROR_FUNCTION(NotSupported)
+DEFINE_ERROR_FUNCTION(InvalidArgument)
 
 #undef DEFINE_ERROR_FUNCTION
 
